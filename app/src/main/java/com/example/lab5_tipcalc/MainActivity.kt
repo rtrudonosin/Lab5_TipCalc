@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Lab5_TipCalcTheme {
+            Lab5_TipCalcTheme() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     onScreen()
                 }
@@ -49,7 +49,7 @@ fun sellCount(sum: Int?, quentity: Int?): Int {
             in 1 .. 2 -> round(sum * 0.03).toInt()
             in 3 .. 5 -> round(sum * 0.05).toInt()
             in 6 .. 10 -> round(sum * 0.07).toInt()
-            in 10 .. 100 -> round(sum * 0.1).toInt()
+            in 11 .. 100 -> round(sum * 0.1).toInt()
             else -> 0
         }
     }
@@ -67,44 +67,47 @@ fun tipsCount(percent: Float?, sum: Int?): Int {
 fun onScreen() {
     var sumOrder by remember { mutableStateOf("") }
     var queOrder by remember { mutableStateOf("") }
-    var sliderValue by remember { mutableFloatStateOf(0f) }
+    var sliderValue by remember { mutableStateOf(0f) }
     var radioValue = queOrder.toIntOrNull()
     var sell = sellCount(sumOrder.toIntOrNull(),queOrder.toIntOrNull())
     var tips = tipsCount(sliderValue, sumOrder.toIntOrNull())
-    var result = "Скидка: " + sell
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column() {
-
-            TextField(
-                value = sumOrder,
-                modifier = Modifier.padding(10.dp),
-                onValueChange = { newSum: String -> sumOrder = newSum },
-                placeholder = { Text("Сумма заказа") })
-            if ((sumOrder.toIntOrNull() == null) && (sumOrder.isNullOrEmpty() == false)) {
-                Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp),)
+    var result by remember { mutableStateOf("") }
+    var finish by remember { mutableStateOf("") }
+    Box(modifier = Modifier.
+    fillMaxSize()
+    ){
+        Column(){
+            TextField(value = sumOrder, modifier = Modifier.padding(5.dp),
+                onValueChange = {
+                    sumOrder = it
+                    finish = ""
+                    result = "Скидка: " + sell.toString()
+                }, placeholder = {Text("Сумма заказа")})
+            if ((sumOrder.toIntOrNull()==null) && (sumOrder.isNullOrEmpty()==false)){
+                Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp), )
             }
-
-            TextField(
-                value = queOrder,
-                modifier = Modifier.padding(10.dp),
-                onValueChange = { newQue: String -> queOrder = newQue },
-                placeholder = { Text("Кол-во блюд") })
-            if ((queOrder.toIntOrNull() == null) && (queOrder.isNullOrEmpty() == false)) {
-                Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp),)
+            TextField(value = queOrder, modifier = Modifier.padding(5.dp),
+                onValueChange = {
+                    queOrder = it
+                    finish = ""
+                    result = "Скидка: " + sell.toString()
+                }, placeholder = {Text("Кол-во блюд")})
+            if ((queOrder.toIntOrNull()==null) && (queOrder.isNullOrEmpty()==false)){
+                Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp), )
             }
-
             Text("Чаевые: " + tips.toString(), modifier = Modifier.padding(5.dp))
             Slider(
                 value = sliderValue,
-                onValueChange = {sliderValue = it},
+                onValueChange = {
+                    sliderValue = it
+                    finish = ""
+                    result = "Скидка: " + sell.toString()
+                },
                 valueRange = 0f..25f,
                 steps = 4,
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(5.dp),
             )
-
             Text(round(sliderValue).toInt().toString(), modifier = Modifier.padding(5.dp))
-
             Row(modifier = Modifier.padding(5.dp)) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     RadioButton(
@@ -112,37 +115,44 @@ fun onScreen() {
                         onClick = {},
                     )
                     Text("3%")
-                }
 
+                }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     RadioButton(
                         selected = (radioValue in 3 .. 5),
                         onClick = {},
                     )
                     Text("5%")
-                }
 
+                }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     RadioButton(
                         selected = (radioValue in 6 .. 10),
                         onClick = {},
                     )
                     Text("7%")
-                }
 
+                }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     RadioButton(
                         selected = (radioValue in (11..100)),
                         onClick = {},
                     )
                     Text("10%")
+
                 }
             }
-
-            Text(result, modifier = Modifier.padding(5.dp))
-
+            if (finish != ""){
+                Text(finish, modifier = Modifier.padding(5.dp))
+            }
+            else Text(result, modifier = Modifier.padding(5.dp))
             Button(
-                onClick = {result = (sumOrder.toInt()-sell+tips).toString()},
+                onClick = {
+                    if (sumOrder.toIntOrNull() != null){
+                        finish = (sumOrder.toInt() - sell + tips).toString()
+                    }
+                    else finish = "Скидка: " + sell.toString()
+                },
                 modifier = Modifier.padding(5.dp)
             ) {
                 Text("Рассчитать")
