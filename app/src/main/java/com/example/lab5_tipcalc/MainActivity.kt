@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.Slider
+import androidx.compose.ui.composed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.lab5_tipcalc.ui.theme.Lab5_TipCalcTheme
+import kotlin.math.round
+import kotlin.ranges.rangeTo
 import java.nio.file.WatchEvent
 import kotlin.reflect.typeOf
 
@@ -45,11 +50,11 @@ class MainActivity : ComponentActivity() {
 fun onScreen() {
     var sumOrder by remember { mutableStateOf("") }
     var queOrder by remember { mutableStateOf("") }
+    var sliderValue by remember { mutableFloatStateOf(0f) }
 
-    Box(modifier = Modifier.
-    fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column() {
+
             TextField(
                 value = sumOrder,
                 modifier = Modifier.padding(10.dp),
@@ -58,6 +63,7 @@ fun onScreen() {
             if ((sumOrder.toIntOrNull() == null) && (sumOrder.isNullOrEmpty() == false)) {
                 Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp),)
             }
+
             TextField(
                 value = queOrder,
                 modifier = Modifier.padding(10.dp),
@@ -66,6 +72,16 @@ fun onScreen() {
             if ((queOrder.toIntOrNull() == null) && (queOrder.isNullOrEmpty() == false)) {
                 Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp),)
             }
+
+            Text("Чаевые:")
+            Slider(
+                value = sliderValue,
+                onValueChange = {sliderValue = it},
+                valueRange = 0f..25f,
+                steps = 4,
+                modifier = Modifier.padding(10.dp),
+            )
+            Text(round(sliderValue).toInt().toString(), modifier = Modifier.padding(5.dp))
         }
     }
 }
