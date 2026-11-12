@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -73,10 +74,16 @@ fun onScreen() {
     var tips = tipsCount(sliderValue, sumOrder.toIntOrNull())
     var result by remember { mutableStateOf("") }
     var finish by remember { mutableStateOf("") }
+
     Box(modifier = Modifier.
     fillMaxSize()
     ){
-        Column(){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
+
             TextField(value = sumOrder, modifier = Modifier.padding(5.dp),
                 onValueChange = {
                     sumOrder = it
@@ -86,6 +93,7 @@ fun onScreen() {
             if ((sumOrder.toIntOrNull()==null) && (sumOrder.isNullOrEmpty()==false)){
                 Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp), )
             }
+
             TextField(value = queOrder, modifier = Modifier.padding(5.dp),
                 onValueChange = {
                     queOrder = it
@@ -95,7 +103,9 @@ fun onScreen() {
             if ((queOrder.toIntOrNull()==null) && (queOrder.isNullOrEmpty()==false)){
                 Text("Неподдерживаемый формат", modifier = Modifier.padding(5.dp), )
             }
+
             Text("Чаевые: " + tips.toString(), modifier = Modifier.padding(5.dp))
+
             Slider(
                 value = sliderValue,
                 onValueChange = {
@@ -107,9 +117,12 @@ fun onScreen() {
                 steps = 4,
                 modifier = Modifier.padding(5.dp),
             )
+
             Text(round(sliderValue).toInt().toString(), modifier = Modifier.padding(5.dp))
+
             Row(modifier = Modifier.padding(5.dp)) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
                     RadioButton(
                         selected = (radioValue in 1 .. 2),
                         onClick = {},
@@ -118,6 +131,7 @@ fun onScreen() {
 
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
                     RadioButton(
                         selected = (radioValue in 3 .. 5),
                         onClick = {},
@@ -126,6 +140,7 @@ fun onScreen() {
 
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
                     RadioButton(
                         selected = (radioValue in 6 .. 10),
                         onClick = {},
@@ -134,6 +149,7 @@ fun onScreen() {
 
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
                     RadioButton(
                         selected = (radioValue in (11..100)),
                         onClick = {},
@@ -146,6 +162,7 @@ fun onScreen() {
                 Text(finish, modifier = Modifier.padding(5.dp))
             }
             else Text(result, modifier = Modifier.padding(5.dp))
+
             Button(
                 onClick = {
                     if (sumOrder.toIntOrNull() != null){
